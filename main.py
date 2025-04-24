@@ -1,5 +1,6 @@
 import json
 import random
+import os
 from telegram import Update
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
 
@@ -33,16 +34,16 @@ def meme_handler(update: Update, context: CallbackContext) -> None:
         return
 
     # 4) случайный выбор одного мемa
-    meme = random.choice(matches)
-    desc = meme.get('description', '').strip()
-    file_name = meme.get('file_name', '').strip()
+    chosen = random.choice(matches)
+    file_name = chosen.get('file_name')
+    photo_path = os.path.join('all_memes', file_name)
 
-    # формируем ответ: описание + имя файла
-    reply = desc
-    if file_name:
-        reply += f"\n{file_name}"
+    try:
+        with open(photo_path, 'rb') as photo:
+            update.message.reply_photo(photo, caption=chosen.get('description', ''))
+    except FileNotFoundError:
+        update.message.reply_text(f"Не удалось найти файл {photo_path}")"
 
-    update.message.reply_text(reply)
 
 
 def main() -> None:
