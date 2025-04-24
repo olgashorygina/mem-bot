@@ -42,7 +42,7 @@ def meme_handler(update: Update, context: CallbackContext) -> None:
         with open(photo_path, 'rb') as photo:
             update.message.reply_photo(photo, caption=chosen.get('description', ''))
     except FileNotFoundError:
-        update.message.reply_text(f"Не удалось найти файл {photo_path}")"
+        update.message.reply_text(f"Не удалось найти файл {photo_path}")
 
 
 
